@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<report title="CurrentMedicationLevels" description="Shows all products not dispensed, ordered by location v1">
+<query>
+SELECT 	dp.name as 'Product Name',
+		pl.name as 'Location',
+		count(*) as 'Current Level' 
+		FROM DrugProduct dp, ProductLocation pl 
+		WHERE dp.location=pl.id 
+		AND dp.dispensingEvent IS NULL 
+		AND pl.id like '{location}'
+		AND dp.name like '{productName}'
+		GROUP BY dp.name,dp.location 
+		ORDER BY dp.name, pl.name;
+</query>
+<param priority="choice" id="location" type="list" description="Product Location">
+	<choice id="%">ALL</choice>
+	<param-query> select id,name from ProductLocation order by name; </param-query> 
+</param>
+
+<param priority="choice" id="productName" type="list" description="Product Name">
+	<choice id="%">ALL</choice>
+	<param-query>select distinct name,name from DrugProduct order by name;  </param-query> 
+</param>
+
+</report>
